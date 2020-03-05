@@ -5,8 +5,6 @@
 
   http://www.frogtoss.com/labs
  */
-
-
 #ifndef _NFD_H
 #define _NFD_H
 
