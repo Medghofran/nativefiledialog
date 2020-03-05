@@ -67,6 +67,7 @@ void        NFD_PathSet_Free( nfdpathset_t *pathSet );
 
 #ifdef __cplusplus
 }
+
 #endif
 
 #endif
