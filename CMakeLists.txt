@@ -20,13 +20,14 @@ set(NFD_DEPS)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   # Mac OS X specific code
   set(OS "Mac OS X")
-  message(STATUS "compiling native file dialog library for ${OS}")
+  message(STATUS "Compiling NFD Library for target: ${OS}")
 
   # append linux source files to the NFD_SRC var
   set(NFD_SRC ${NFD_SRC_DIR}/nfd_cocoa.m ${NFD_SRC})
 
   # append linux dependencies to the list
-  set(NFD_DEPS objc ${NFD_DEPS})
+  set(NFD_DEPS ${NFD_DEPS} "-framework AppKit" "-framework Foundation")
+  set(NFD_DEPS ${NFD_DEPS} objc)
 
   # MAC OS SPECIFIC: set the linker flags to link against the foundation and
   # appkit frameworks
@@ -39,7 +40,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
   # Linux specific code
   set(OS "Linux")
-  message(STATUS "compiling native file dialog library for ${OS}")
+  message(STATUS "Compiling NFD Library for target:  ${OS}")
 
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
@@ -61,14 +62,13 @@ endif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
 # add library and
 add_library(lib_nfd SHARED ${NFD_SRC})
-target_link_libraries(lib_nfd ${NFD_DEPS})
+target_link_libraries(lib_nfd PRIVATE ${NFD_DEPS})
 target_include_directories(lib_nfd PUBLIC ${NFD_EXPOSE_HEADERS})
 
-
-# test working nfd lib
+# Generate Test Executables for target
 option(GENERATE_TESTS "CHECK WORKING NFD LIB" OFF)
 if(GENERATE_TESTS)
-  message("GENERATING TEST EXEC")
+  message(STATUS "GENERATING TEST EXECs")
   add_executable(nfd_test_open ${NFD_ROOT}/test/test_opendialog.c)
   target_link_libraries(nfd_test_open lib_nfd)
 endif(GENERATE_TESTS)
